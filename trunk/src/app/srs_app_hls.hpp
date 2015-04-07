@@ -165,6 +165,7 @@ private:
     std::string hls_path;
     int hls_fragment;
     int hls_window;
+    bool hls_cleanup;
 private:
     int _sequence_no;
     std::string m3u8;
@@ -183,7 +184,7 @@ public:
 public:
     virtual int sequence_no();
 public:
-    virtual int update_config(std::string _app, std::string _stream, std::string path, int fragment, int window);
+    virtual int update_config(std::string _app, std::string _stream, std::string path, int fragment, int window,bool cleanup);
     /**
     * open a new segment(a new ts file),
     * @param segment_start_dts use to calc the segment duration,

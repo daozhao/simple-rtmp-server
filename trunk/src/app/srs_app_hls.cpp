@@ -560,6 +560,7 @@ SrsHlsAacJitter::SrsHlsAacJitter()
 SrsHlsMuxer::SrsHlsMuxer()
 {
     hls_fragment = hls_window = 0;
+    hls_cleanup = true
     _sequence_no = 0;
     current = NULL;
 }
@@ -583,6 +584,7 @@ int SrsHlsMuxer::sequence_no()
 
 int SrsHlsMuxer::update_config(
     string _app, string _stream, string path, int fragment, int window
+    ,bool cleanup
 ) {
     int ret = ERROR_SUCCESS;
     
@@ -591,6 +593,8 @@ int SrsHlsMuxer::update_config(
     hls_path = path;
     hls_fragment = fragment;
     hls_window = window;
+    hls_cleanup = cleanup;
+
     
     return ret;
 }
@@ -801,7 +805,11 @@ int SrsHlsMuxer::segment_close(string log_desc)
     // remove the ts file.
     for (int i = 0; i < (int)segment_to_remove.size(); i++) {
         SrsHlsSegment* segment = segment_to_remove[i];
-        unlink(segment->full_path.c_str());
+
+        if (hls_cleanup) {
+            unlink(segment->full_path.c_str());
+        }
+
         srs_freep(segment);
     }
     segment_to_remove.clear();
@@ -1013,12 +1021,12 @@ int SrsHlsCache::on_publish(SrsHlsMuxer* muxer, SrsRequest* req, int64_t segment
     
     // get the hls path config
     std::string hls_path = _srs_config->get_hls_path(vhost);
-    
+    bool cleanup = _srs_config->get_hls_cleanup(vhost);
     // TODO: FIXME: support load exists m3u8, to continue publish stream.
     // for the HLS donot requires the EXT-X-MEDIA-SEQUENCE be monotonically increase.
     
     // open muxer
-    if ((ret = muxer->update_config(app, stream, hls_path, hls_fragment, hls_window)) != ERROR_SUCCESS) {
+    if ((ret = muxer->update_config(app, stream, hls_path, hls_fragment, hls_window,cleanup)) != ERROR_SUCCESS) {
         srs_error("m3u8 muxer update config failed. ret=%d", ret);
         return ret;
     }

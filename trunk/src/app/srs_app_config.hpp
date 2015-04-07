@@ -52,6 +52,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define SRS_CONF_DEFAULT_HLS_ON_ERROR_DISCONNECT "disconnect"
 #define SRS_CONF_DEFAULT_HLS_ON_ERROR_CONTINUE "continue"
 #define SRS_CONF_DEFAULT_HLS_ON_ERROR SRS_CONF_DEFAULT_HLS_ON_ERROR_IGNORE
+#define SRS_CONF_DEFAULT_HLS_CLEANUP true
 #define SRS_CONF_DEFAULT_DVR_PATH "./objs/nginx/html"
 #define SRS_CONF_DEFAULT_DVR_PLAN_SESSION "session"
 #define SRS_CONF_DEFAULT_DVR_PLAN_SEGMENT "segment"
@@ -837,6 +838,10 @@ public:
     * @see https://github.com/winlinvip/simple-rtmp-server/issues/264
     */
     virtual std::string         get_hls_on_error(std::string vhost);
+    /**
+     * whether cleanup the old ts files.
+     */
+    virtual bool                get_hls_cleanup(std::string vhost);
 // dvr section
 private:
     /**
