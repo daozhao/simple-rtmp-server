@@ -560,7 +560,7 @@ SrsHlsAacJitter::SrsHlsAacJitter()
 SrsHlsMuxer::SrsHlsMuxer()
 {
     hls_fragment = hls_window = 0;
-    hls_cleanup = true
+    hls_cleanup = true;
     _sequence_no = 0;
     current = NULL;
 }
